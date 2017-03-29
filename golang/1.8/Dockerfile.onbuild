@@ -4,6 +4,8 @@ RUN mkdir -p /go/src/app && \
     go get -u github.com/kardianos/govendor
 
 ONBUILD ARG PACKAGE=app
+ONBUILD ARG BIN_NAME=main 
 ONBUILD WORKDIR /go/src/${PACKAGE}
 ONBUILD COPY . /go/src/${PACKAGE}
-ONBUILD RUN govendor sync
+ONBUILD RUN govendor sync && \
+            CGO_ENABLED=0 go build -a -installsuffix cgo -o build/${BIN_NAME}
